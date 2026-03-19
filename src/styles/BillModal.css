@@ -1,0 +1,214 @@
+.bill-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.bill-modal {
+  background: white;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.3s ease-out;
+  display: flex;
+  flex-direction: column;
+}
+
+.bill-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+  background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+}
+
+.bill-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #1f2937;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.close-btn:hover {
+  background: rgba(0, 0, 0, 0.1);
+  color: #1f2937;
+}
+
+.bill-content {
+  padding: 2rem;
+  overflow-y: auto;
+  flex: 1;
+  font-family: 'Courier New', monospace;
+  background: #fafafa;
+}
+
+.bill-section {
+  margin-bottom: 1.5rem;
+}
+
+.bill-section h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #1f2937;
+  text-align: center;
+}
+
+.bill-section h4 {
+  margin: 0 0 0.75rem 0;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #374151;
+}
+
+.bill-divider {
+  color: #6b7280;
+  margin: 1rem 0;
+  text-align: center;
+  font-size: 0.875rem;
+}
+
+.bill-details {
+  margin-bottom: 1.5rem;
+}
+
+.bill-details p {
+  margin: 0.5rem 0;
+  color: #374151;
+  font-size: 0.95rem;
+}
+
+.bill-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.bill-item-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  color: #374151;
+  font-size: 0.95rem;
+}
+
+.bill-total {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.125rem;
+  font-weight: bold;
+  color: #1f2937;
+  padding: 1rem 0;
+}
+
+.bill-payment-info {
+  text-align: center;
+  color: #059669;
+  font-weight: bold;
+  margin: 0.5rem 0;
+  font-size: 1rem;
+}
+
+.bill-footer {
+  text-align: center;
+  color: #6b7280;
+  font-style: italic;
+  margin-top: 1rem;
+  font-size: 0.95rem;
+}
+
+.bill-modal-footer {
+  padding: 1.5rem;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: center;
+  background: white;
+}
+
+.ok-btn {
+  background: #1f2937;
+  color: white;
+  border: none;
+  padding: 0.75rem 3rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ok-btn:hover {
+  background: #111827;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.ok-btn:active {
+  transform: translateY(0);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Scrollbar styling */
+.bill-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.bill-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.bill-content::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.bill-content::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
