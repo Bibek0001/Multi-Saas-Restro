@@ -475,7 +475,7 @@ const POSPage = () => {
                       </button>
                     )}
                     {order.status === 'completed' && (
-                      <span className="completed-badge">✓ Completed</span>
+                      <span className="completed-badge">Completed</span>
                     )}
                   </div>
                 </div>

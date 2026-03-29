@@ -1,15 +1,26 @@
 import React, { useState } from 'react';
 import { useWebsiteContent } from '../context/WebsiteContentContext';
 import { useTenant } from '../context/TenantContext';
+import { useAuth } from '../context/AuthContext';
 import '../styles/WebsiteContentManager.css';
 
 const WebsiteContentManager = () => {
   const { content, loading, updateProfile, updateBusinessHours, addMenuItem, updateMenuItem, deleteMenuItem } = useWebsiteContent();
   const { tenant } = useTenant();
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('profile');
   const [editingItem, setEditingItem] = useState(null);
   const [showAddItem, setShowAddItem] = useState(false);
   const [saveStatus, setSaveStatus] = useState('');
+
+  // Use content.tenantId as primary - it's always loaded from WebsiteContentContext
+  const tenantId = content?.tenantId || tenant?.id || user?.tenantId || '';
+
+  const theme = tenantId === 'bcd'
+    ? { gradient: 'linear-gradient(135deg, #7f1d1d, #dc2626, #ef4444)', accent: '#dc2626', light: '#fee2e2' }
+    : tenantId === 'cdf'
+    ? { gradient: 'linear-gradient(135deg, #064e3b, #059669, #10b981)', accent: '#059669', light: '#d1fae5' }
+    : { gradient: 'linear-gradient(135deg, #1e1b4b, #4f46e5, #0891b2)', accent: '#4f46e5', light: '#eef2ff' };
 
   if (loading) {
     return <div className="loading">Loading content...</div>;
@@ -94,9 +105,9 @@ const WebsiteContentManager = () => {
 
   return (
     <div className="content-manager">
-      <div className="content-manager-header">
+      <div className="content-manager-header" style={{background: theme.gradient}}>
         <h1>Website Content Manager</h1>
-        <p>Manage your restaurant's public website content</p>
+        <p>{content.profile?.name || tenant?.name} — Public Website Content</p>
       </div>
 
       {saveStatus && (
@@ -106,30 +117,16 @@ const WebsiteContentManager = () => {
       )}
 
       <div className="content-tabs">
-        <button 
-          className={activeTab === 'profile' ? 'active' : ''}
-          onClick={() => setActiveTab('profile')}
-        >
-          Restaurant Profile
-        </button>
-        <button 
-          className={activeTab === 'hours' ? 'active' : ''}
-          onClick={() => setActiveTab('hours')}
-        >
-          Business Hours
-        </button>
-        <button 
-          className={activeTab === 'menu' ? 'active' : ''}
-          onClick={() => setActiveTab('menu')}
-        >
-          Menu Items
-        </button>
-        <button 
-          className={activeTab === 'preview' ? 'active' : ''}
-          onClick={() => setActiveTab('preview')}
-        >
-          Preview
-        </button>
+        {['profile', 'hours', 'menu', 'preview'].map(tab => (
+          <button
+            key={tab}
+            className={activeTab === tab ? 'active' : ''}
+            onClick={() => setActiveTab(tab)}
+            style={activeTab === tab ? {color: theme.accent, borderBottomColor: theme.accent} : {}}
+          >
+            {tab === 'profile' ? 'Restaurant Profile' : tab === 'hours' ? 'Business Hours' : tab === 'menu' ? 'Menu Items' : 'Preview'}
+          </button>
+        ))}
       </div>
 
       <div className="content-panel">
@@ -195,7 +192,7 @@ const WebsiteContentManager = () => {
               />
             </div>
 
-            <button type="submit" className="btn-primary">Save Profile</button>
+            <button type="submit" className="btn-primary" style={{background: `linear-gradient(135deg, ${theme.accent}, ${theme.accent}dd)`}}>Save Profile</button>
           </form>
         )}
 
@@ -232,7 +229,7 @@ const WebsiteContentManager = () => {
               </div>
             ))}
 
-            <button type="submit" className="btn-primary">Save Hours</button>
+            <button type="submit" className="btn-primary" style={{background: `linear-gradient(135deg, ${theme.accent}, ${theme.accent}dd)`}}>Save Hours</button>
           </form>
         )}
 
@@ -303,7 +300,7 @@ const WebsiteContentManager = () => {
                   ) : (
                     <>
                       <div className="item-image">
-                        <img src={item.image} alt={item.name} />
+                        {item.name?.charAt(0) || '?'}
                       </div>
                       <div className="item-details">
                         <h3>{item.name}</h3>

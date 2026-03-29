@@ -7,6 +7,7 @@ const BCDRestaurantPage = () => {
   const [isReservationModalOpen, setIsReservationModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [showAllMenu, setShowAllMenu] = useState(false);
 
   const restaurantData = {
     id: 'bcd',
@@ -26,27 +27,18 @@ const BCDRestaurantPage = () => {
       'Premium Wine Collection'
     ],
     menuHighlights: [
-      {
-        name: 'BCD Signature Burger',
-        description: 'Premium wagyu beef with truffle aioli and aged cheddar',
-        price: 'NPR 1,299',
-        image: '/assets/bcd-burger.jpg',
-        category: 'Burgers'
-      },
-      {
-        name: 'Grilled Atlantic Salmon',
-        description: 'Fresh salmon with herb butter and seasonal vegetables',
-        price: 'NPR 1,499',
-        image: '/assets/bcd-salmon.jpg',
-        category: 'Seafood'
-      },
-      {
-        name: 'Lobster Risotto',
-        description: 'Creamy arborio rice with fresh lobster and saffron',
-        price: 'NPR 1,699',
-        image: '/assets/bcd-risotto.jpg',
-        category: 'Pasta & Rice'
-      }
+      { name: 'BCD Signature Burger', description: 'Premium wagyu beef with truffle aioli and aged cheddar', price: 'NPR 1,299', image: '/assets/bcd-burger.jpg', category: 'Burgers' },
+      { name: 'Grilled Atlantic Salmon', description: 'Fresh salmon with herb butter and seasonal vegetables', price: 'NPR 1,499', image: '/assets/bcd-salmon.jpg', category: 'Seafood' },
+      { name: 'Lobster Risotto', description: 'Creamy arborio rice with fresh lobster and saffron', price: 'NPR 1,699', image: '/assets/bcd-risotto.jpg', category: 'Pasta & Rice' },
+      { name: 'Wagyu Ribeye Steak', description: 'Premium A5 wagyu with truffle butter and roasted garlic', price: 'NPR 2,499', image: '/assets/bcd-steak.jpg', category: 'Steaks' },
+      { name: 'Truffle Pasta', description: 'Handmade fettuccine with black truffle and parmesan', price: 'NPR 1,399', image: '/assets/bcd-pasta.jpg', category: 'Pasta & Rice' },
+      { name: 'Seafood Platter', description: 'Fresh prawns, calamari, and fish with dipping sauces', price: 'NPR 1,899', image: '/assets/bcd-seafood.jpg', category: 'Seafood' },
+      { name: 'Caesar Salad', description: 'Crisp romaine, parmesan, croutons, house caesar dressing', price: 'NPR 799', image: '/assets/bcd-salad.jpg', category: 'Salads' },
+      { name: 'Chocolate Lava Cake', description: 'Warm chocolate cake with vanilla ice cream', price: 'NPR 599', image: '/assets/bcd-dessert.jpg', category: 'Desserts' },
+      { name: 'Mushroom Risotto', description: 'Creamy arborio rice with wild mushrooms and herbs', price: 'NPR 1,199', image: '/assets/bcd-mushroom.jpg', category: 'Pasta & Rice' },
+      { name: 'Beef Tenderloin', description: 'Pan-seared tenderloin with red wine reduction', price: 'NPR 2,199', image: '/assets/bcd-tenderloin.jpg', category: 'Steaks' },
+      { name: 'Prawn Cocktail', description: 'Chilled tiger prawns with Marie Rose sauce', price: 'NPR 999', image: '/assets/bcd-prawn.jpg', category: 'Starters' },
+      { name: 'French Onion Soup', description: 'Classic soup with gruyere crouton', price: 'NPR 699', image: '/assets/bcd-soup.jpg', category: 'Starters' },
     ],
     contact: {
       address: 'Durbar Marg, Kathmandu 44600, Nepal',
@@ -69,6 +61,8 @@ const BCDRestaurantPage = () => {
     const matchesCategory = selectedCategory === 'all' || itemCategory === selectedCategory;
     return matchesSearch && matchesCategory;
   });
+
+  const displayedItems = showAllMenu ? filteredMenuItems : filteredMenuItems.slice(0, 4);
 
   return (
     <div className="restaurant-page bcd-theme">
@@ -132,7 +126,7 @@ const BCDRestaurantPage = () => {
 
         <section id="menu" className="menu-section">
           <div className="container">
-            <h2>Menu Highlights</h2>
+            <h2>Our Full Menu</h2>
             
             <div className="menu-filters">
               <div className="search-box">
@@ -157,14 +151,19 @@ const BCDRestaurantPage = () => {
             </div>
 
             <div className="menu-count">
-              Showing {filteredMenuItems.length} items
+              Showing {displayedItems.length} of {filteredMenuItems.length} items
             </div>
 
             <div className="menu-grid">
-              {filteredMenuItems.map((item, index) => (
+              {displayedItems.map((item, index) => (
                 <div key={index} className="menu-item-card">
-                  <div className="menu-item-image">
-                    <img src={item.image} alt={item.name} />
+                  <div className="menu-item-image" style={{
+                    background: `hsl(${(index * 47) % 360}, 70%, 92%)`,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center'
+                  }}>
+                    <span style={{fontSize: '2.5rem', fontWeight: 800, color: `hsl(${(index * 47) % 360}, 60%, 45%)`, opacity: 0.6}}>
+                      {item.name.charAt(0)}
+                    </span>
                   </div>
                   <div className="menu-item-content">
                     <h3>{item.name}</h3>
@@ -185,9 +184,12 @@ const BCDRestaurantPage = () => {
             )}
 
             <div className="menu-cta">
-              <Link to="/order" state={{ tenant: restaurantData }} className="view-full-menu">
-                View Full Menu & Order
-              </Link>
+              <button className="view-full-menu" onClick={() => {
+                setShowAllMenu(!showAllMenu);
+                if (showAllMenu) document.getElementById('menu').scrollIntoView({ behavior: 'smooth' });
+              }}>
+                {showAllMenu ? 'Show Less' : `View Full Menu (${filteredMenuItems.length} items)`}
+              </button>
             </div>
           </div>
         </section>
@@ -376,7 +378,13 @@ const BCDRestaurantPage = () => {
               <p>Subscribe to our newsletter for exclusive offers, events, and culinary updates</p>
               <form className="newsletter-form" onSubmit={(e) => {
                 e.preventDefault();
+                const email = e.target.querySelector('input[type="email"]').value;
+                if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                  alert('Please enter a valid email address.');
+                  return;
+                }
                 alert('Thank you for subscribing! You will receive our latest updates.');
+                e.target.reset();
               }}>
                 <input 
                   type="email" 
@@ -411,7 +419,7 @@ const BCDRestaurantPage = () => {
                 <h4>Management</h4>
                 <ul>
                   <li><Link to="/login" state={{ tenant: restaurantData }}>Manager Login</Link></li>
-                  <li><a href="https://restro24web.netlify.app" target="_blank" rel="noopener noreferrer">Restro24 Platform</a></li>
+                  <li><a href="https://restro24.com" target="_blank" rel="noopener noreferrer">Restro24 Platform</a></li>
                 </ul>
               </div>
             </div>

@@ -18,6 +18,21 @@ const ReservationModal = ({ isOpen, onClose, restaurantName, tenantId }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [reservationId, setReservationId] = useState('');
+  const [errors, setErrors] = useState({});
+
+  const validate = () => {
+    const e = {};
+    if (!formData.name.trim()) e.name = 'Full name is required';
+    else if (formData.name.trim().length < 2) e.name = 'Name must be at least 2 characters';
+    if (!formData.email.trim()) e.email = 'Email is required';
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) e.email = 'Enter a valid email';
+    if (!formData.phone.trim()) e.phone = 'Phone number is required';
+    else if (!/^[0-9+\-\s]{7,15}$/.test(formData.phone.trim())) e.phone = 'Enter a valid phone number';
+    if (!formData.date) e.date = 'Please select a date';
+    if (!formData.time) e.time = 'Please select a time';
+    setErrors(e);
+    return Object.keys(e).length === 0;
+  };
 
   const handleChange = (e) => {
     setFormData({
@@ -28,6 +43,7 @@ const ReservationModal = ({ isOpen, onClose, restaurantName, tenantId }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validate()) return;
     setIsSubmitting(true);
 
     // Simulate API call
@@ -105,52 +121,31 @@ const ReservationModal = ({ isOpen, onClose, restaurantName, tenantId }) => {
             <div className="form-row">
               <div className="form-group">
                 <label htmlFor="name">Full Name *</label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  required
-                  placeholder="Enter your full name"
-                />
+                <input type="text" id="name" name="name" value={formData.name}
+                  onChange={handleChange} placeholder="Enter your full name"
+                  className={errors.name ? 'input-error' : ''} />
+                {errors.name && <p className="field-error">{errors.name}</p>}
               </div>
               <div className="form-group">
                 <label htmlFor="email">Email *</label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                  placeholder="Enter your email"
-                />
+                <input type="email" id="email" name="email" value={formData.email}
+                  onChange={handleChange} placeholder="Enter your email"
+                  className={errors.email ? 'input-error' : ''} />
+                {errors.email && <p className="field-error">{errors.email}</p>}
               </div>
             </div>
 
             <div className="form-row">
               <div className="form-group">
                 <label htmlFor="phone">Phone Number *</label>
-                <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  required
-                  placeholder="(977) 9000000000"
-                />
+                <input type="tel" id="phone" name="phone" value={formData.phone}
+                  onChange={handleChange} placeholder="(977) 9000000000"
+                  className={errors.phone ? 'input-error' : ''} />
+                {errors.phone && <p className="field-error">{errors.phone}</p>}
               </div>
               <div className="form-group">
                 <label htmlFor="guests">Number of Guests *</label>
-                <select
-                  id="guests"
-                  name="guests"
-                  value={formData.guests}
-                  onChange={handleChange}
-                  required
-                >
+                <select id="guests" name="guests" value={formData.guests} onChange={handleChange} required>
                   {guestOptions.map(option => (
                     <option key={option} value={option}>{option} {option === '1' ? 'Guest' : 'Guests'}</option>
                   ))}
@@ -161,30 +156,21 @@ const ReservationModal = ({ isOpen, onClose, restaurantName, tenantId }) => {
             <div className="form-row">
               <div className="form-group">
                 <label htmlFor="date">Preferred Date *</label>
-                <input
-                  type="date"
-                  id="date"
-                  name="date"
-                  value={formData.date}
-                  onChange={handleChange}
-                  required
-                  min={new Date().toISOString().split('T')[0]}
-                />
+                <input type="date" id="date" name="date" value={formData.date}
+                  onChange={handleChange} min={new Date().toISOString().split('T')[0]}
+                  className={errors.date ? 'input-error' : ''} />
+                {errors.date && <p className="field-error">{errors.date}</p>}
               </div>
               <div className="form-group">
                 <label htmlFor="time">Preferred Time *</label>
-                <select
-                  id="time"
-                  name="time"
-                  value={formData.time}
-                  onChange={handleChange}
-                  required
-                >
+                <select id="time" name="time" value={formData.time} onChange={handleChange}
+                  className={errors.time ? 'input-error' : ''}>
                   <option value="">Select a time</option>
                   {timeSlots.map(time => (
                     <option key={time} value={time}>{time}</option>
                   ))}
                 </select>
+                {errors.time && <p className="field-error">{errors.time}</p>}
               </div>
             </div>
 

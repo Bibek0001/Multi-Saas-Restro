@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useTenant } from './TenantContext';
+import { useAuth } from './AuthContext';
 
 const WebsiteContentContext = createContext();
 
@@ -13,15 +14,20 @@ export const useWebsiteContent = () => {
 
 export const WebsiteContentProvider = ({ children }) => {
   const { tenant } = useTenant();
+  const { user } = useAuth();
   const [content, setContent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (tenant && tenant.id) {
-      fetchContent(tenant.id);
+    // Use tenant.id for subdomains, or user.tenantId for central domain managers
+    const id = (tenant && !tenant.isCentral) ? tenant.id : user?.tenantId;
+    if (id) {
+      fetchContent(id);
+    } else {
+      setLoading(false);
     }
-  }, [tenant]);
+  }, [tenant, user]);
 
   const fetchContent = async (tenantId) => {
     try {
