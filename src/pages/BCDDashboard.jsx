@@ -99,7 +99,7 @@ const BCDDashboard = () => {
             </div>
           )}
           <span>Welcome, {user?.name}</span>
-          <a href="https://restro24.com" target="_blank" rel="noopener noreferrer" className="restro-link">
+          <a href="https://restro24web.netlify.app" target="_blank" rel="noopener noreferrer" className="restro-link">
             Restro24 Platform
           </a>
           <button onClick={handleLogout} className="logout-button">

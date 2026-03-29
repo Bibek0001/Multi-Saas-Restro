@@ -103,7 +103,7 @@ const CDFDashboard = () => {
             </div>
           )}
           <span>Welcome, {user?.name}</span>
-          <a href="https://restro24.com" target="_blank" rel="noopener noreferrer" className="restro-link">
+          <a href="https://restro24web.netlify.app" target="_blank" rel="noopener noreferrer" className="restro-link">
             Restro24 Platform
           </a>
           <button onClick={handleLogout} className="logout-button">
@@ -272,7 +272,7 @@ const CDFPOSTab = ({ navigate }) => {
           <div style={{
             fontSize: '4rem',
             marginBottom: '1rem'
-          }}>POS</div>
+          }}>🛒</div>
           <h3 style={{marginBottom: '1rem'}}>CDF Bistro POS System</h3>
           <p style={{
             color: '#64748b',
@@ -410,7 +410,7 @@ const CDFOrdersTab = ({ orders, updateOrderStatus }) => {
       localStorage.setItem('restro24_orders', JSON.stringify(updatedOrders));
       window.dispatchEvent(new Event('storage'));
       
-      alert(`Orders merged successfully!\n\nNew Order ID: ${mergedOrder.id}\nMerged Orders: ${selectedOrdersForMerge.join(', ')}\nTotal Amount: NPR ${totalAmount}\nTotal Items: ${totalItemCount}`);
+      alert(`✓ Orders merged successfully!\n\nNew Order ID: ${mergedOrder.id}\nMerged Orders: ${selectedOrdersForMerge.join(', ')}\nTotal Amount: NPR ${totalAmount}\nTotal Items: ${totalItemCount}`);
       setSelectedOrdersForMerge([]);
     }
   };
@@ -677,7 +677,7 @@ const CDFOrdersTab = ({ orders, updateOrderStatus }) => {
                           fontSize: '0.875rem',
                           fontWeight: '600'
                         }}>
-                          Paid via {order.paymentMethod === 'cash' ? 'Cash' : order.paymentMethod === 'wallet' ? 'Wallet' : 'Card'}
+                          ✓ Paid via {order.paymentMethod === 'cash' ? 'Cash' : order.paymentMethod === 'wallet' ? 'Wallet' : 'Card'}
                         </span>
                       )}
                     </div>

@@ -90,7 +90,7 @@ const RestaurantWebsite = () => {
                 Manager Dashboard
               </a>
               <span> | </span>
-              <a href="https://restro24.com" target="_blank" rel="noopener noreferrer">
+              <a href="https://restro24web.netlify.app" target="_blank" rel="noopener noreferrer">
                 Restro24 Platform
               </a>
             </div>

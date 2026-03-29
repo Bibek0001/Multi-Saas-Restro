@@ -277,7 +277,7 @@ const DynamicRestaurantPage = () => {
                 <h4>Management</h4>
                 <ul>
                   <li><Link to="/login" state={{ tenant }}>Manager Login</Link></li>
-                  <li><a href="https://restro24.com" target="_blank" rel="noopener noreferrer">Restro24 Platform</a></li>
+                  <li><a href="https://restro24web.netlify.app" target="_blank" rel="noopener noreferrer">Restro24 Platform</a></li>
                 </ul>
               </div>
             </div>

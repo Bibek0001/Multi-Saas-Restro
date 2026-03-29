@@ -12,14 +12,6 @@ const OrderingPage = () => {
   
   // Get tenant from location state (passed from restaurant pages) or from context
   const currentTenant = location.state?.tenant || tenant;
-
-  // Theme based on tenant
-  const tenantId = currentTenant?.id || '';
-  const theme = tenantId === 'bcd'
-    ? { primary: '#dc2626', dark: '#b91c1c', light: '#fee2e2', gradient: 'linear-gradient(135deg, #7f1d1d, #dc2626, #ef4444)' }
-    : tenantId === 'cdf'
-    ? { primary: '#059669', dark: '#047857', light: '#d1fae5', gradient: 'linear-gradient(135deg, #064e3b, #059669, #10b981)' }
-    : { primary: '#4f46e5', dark: '#4338ca', light: '#eef2ff', gradient: 'linear-gradient(135deg, #1e1b4b, #4f46e5, #0891b2)' };
   
   const [cart, setCart] = useState([]);
   const [activeCategory, setActiveCategory] = useState('All');
@@ -32,27 +24,6 @@ const OrderingPage = () => {
   });
   const [orderSubmitted, setOrderSubmitted] = useState(false);
   const [submittedOrderId, setSubmittedOrderId] = useState('');
-  const [formErrors, setFormErrors] = useState({});
-
-  const validateOrderForm = () => {
-    const errors = {};
-    if (!customerInfo.name.trim()) errors.name = 'Full name is required';
-    else if (customerInfo.name.trim().length < 2) errors.name = 'Name must be at least 2 characters';
-
-    if (!customerInfo.phone.trim()) errors.phone = 'Phone number is required';
-    else if (!/^[0-9+\-\s]{7,15}$/.test(customerInfo.phone.trim())) errors.phone = 'Enter a valid phone number';
-
-    if (!customerInfo.email.trim()) errors.email = 'Email is required';
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerInfo.email)) errors.email = 'Enter a valid email address';
-
-    if (customerInfo.deliveryType === 'delivery' && !customerInfo.address.trim())
-      errors.address = 'Delivery address is required';
-
-    if (cart.length === 0) errors.cart = 'Please add at least one item to your cart';
-
-    setFormErrors(errors);
-    return Object.keys(errors).length === 0;
-  };
 
   // Enhanced menu items with more details
   const menuItems = [
@@ -68,22 +39,10 @@ const OrderingPage = () => {
     { id: 10, name: 'Pasta Carbonara', price: 749, category: 'Mains', description: 'Creamy pasta with bacon', image: '' }
   ];
 
-  const categoryColors = {
-    Mains: 'linear-gradient(135deg, #fef3c7, #fde68a)',
-    Salads: 'linear-gradient(135deg, #d1fae5, #a7f3d0)',
-    Pizza: 'linear-gradient(135deg, #fee2e2, #fecaca)',
-    Desserts: 'linear-gradient(135deg, #fce7f3, #fbcfe8)',
-    All: 'linear-gradient(135deg, #e0e7ff, #c7d2fe)'
-  };
-
-  const categoryInitials = {
-    Mains: 'M', Salads: 'S', Pizza: 'P', Desserts: 'D'
-  };
-
   const categories = ['All', 'Mains', 'Salads', 'Pizza', 'Desserts'];
 
-  const filteredItems = activeCategory === 'All'
-    ? menuItems
+  const filteredItems = activeCategory === 'All' 
+    ? menuItems 
     : menuItems.filter(item => item.category === activeCategory);
 
   const addToCart = (item) => {
@@ -119,7 +78,6 @@ const OrderingPage = () => {
 
   const handleSubmitOrder = (e) => {
     e.preventDefault();
-    if (!validateOrderForm()) return;
     
     const orderData = {
       tenantId: currentTenant?.id || 'general',
@@ -198,11 +156,14 @@ const OrderingPage = () => {
 
   return (
     <div className="ordering-page">
-      <header className="ordering-header" style={{background: theme.gradient}}>
+      <header className="ordering-header">
         <div className="header-content">
-          <button onClick={() => window.history.back()} className="header-back-btn">Back</button>
           <h1>Order from {currentTenant?.name || 'Restro24'}</h1>
-          <div style={{width: '80px'}}></div>
+          {currentTenant?.isSubdomain && (
+            <a href="https://restro24web.netlify.app" target="_blank" rel="noopener noreferrer" className="restro-platform-link">
+              Restro24 Platform
+            </a>
+          )}
         </div>
       </header>
 
@@ -210,16 +171,15 @@ const OrderingPage = () => {
         <div className="menu-section">
           <div className="section-header">
             <h2>Our Menu</h2>
-            <p className="section-subtitle">{filteredItems.length} items available</p>
+            <p className="section-subtitle">Choose from our delicious selection</p>
           </div>
           
           <div className="menu-categories">
             {categories.map(category => (
-              <button
-                key={category}
+              <button 
+                key={category} 
                 className={`category-button ${activeCategory === category ? 'active' : ''}`}
                 onClick={() => setActiveCategory(category)}
-                style={activeCategory === category ? {background: theme.primary, borderColor: theme.primary, color: 'white'} : {}}
               >
                 {category}
               </button>
@@ -229,19 +189,18 @@ const OrderingPage = () => {
           <div className="menu-items-grid">
             {filteredItems.map(item => (
               <div key={item.id} className="menu-item-card">
-                <div className="item-image" style={{background: categoryColors[item.category] || 'linear-gradient(135deg, #e0e7ff, #c7d2fe)'}}>
-                  <span className="item-initial">{item.name.charAt(0)}</span>
-                </div>
-                <div className="item-body">
-                  <span className="item-category">{item.category}</span>
-                  <h3>{item.name}</h3>
-                  <p className="item-description">{item.description}</p>
-                  <div className="item-footer">
-                    <span className="item-price" style={{color: theme.primary}}>NPR {item.price}</span>
-                    <button onClick={() => addToCart(item)} className="add-to-cart-button" style={{background: theme.primary}}>
-                      + Add
-                    </button>
-                  </div>
+                <div className="item-image">{item.image}</div>
+                <h3>{item.name}</h3>
+                <p className="item-description">{item.description}</p>
+                <p className="item-category">{item.category}</p>
+                <div className="item-footer">
+                  <span className="item-price">NPR {item.price}</span>
+                  <button 
+                    onClick={() => addToCart(item)}
+                    className="add-to-cart-button"
+                  >
+                    Add to Cart
+                  </button>
                 </div>
               </div>
             ))}
@@ -249,10 +208,10 @@ const OrderingPage = () => {
         </div>
 
         <div className="cart-section">
-          <h2 style={{borderBottom: `3px solid ${theme.primary}`}}>Cart ({cart.reduce((sum, item) => sum + item.quantity, 0)} items)</h2>
+          <h2>Your Cart ({cart.reduce((sum, item) => sum + item.quantity, 0)} items)</h2>
           {cart.length === 0 ? (
             <div className="empty-cart">
-              <div className="empty-cart-icon"></div>
+              <div className="empty-cart-icon">Cart</div>
               <p>Your cart is empty</p>
               <p className="empty-cart-subtitle">Add items from the menu to get started</p>
             </div>
@@ -311,18 +270,23 @@ const OrderingPage = () => {
 
               <form onSubmit={handleSubmitOrder} className="customer-form">
                 <h3>Delivery Information</h3>
-                {formErrors.cart && <p className="field-error">{formErrors.cart}</p>}
                 
                 <div className="delivery-type">
                   <label className="radio-label">
-                    <input type="radio" name="deliveryType" value="delivery"
+                    <input
+                      type="radio"
+                      name="deliveryType"
+                      value="delivery"
                       checked={customerInfo.deliveryType === 'delivery'}
                       onChange={(e) => setCustomerInfo({...customerInfo, deliveryType: e.target.value})}
                     />
                     <span>Delivery</span>
                   </label>
                   <label className="radio-label">
-                    <input type="radio" name="deliveryType" value="pickup"
+                    <input
+                      type="radio"
+                      name="deliveryType"
+                      value="pickup"
                       checked={customerInfo.deliveryType === 'pickup'}
                       onChange={(e) => setCustomerInfo({...customerInfo, deliveryType: e.target.value})}
                     />
@@ -330,47 +294,37 @@ const OrderingPage = () => {
                   </label>
                 </div>
 
-                <div className="field-group">
-                  <input type="text" placeholder="Full Name *"
-                    value={customerInfo.name}
-                    onChange={(e) => { setCustomerInfo({...customerInfo, name: e.target.value}); setFormErrors({...formErrors, name: ''}); }}
-                    className={formErrors.name ? 'input-error' : ''}
-                  />
-                  {formErrors.name && <p className="field-error">{formErrors.name}</p>}
-                </div>
-
-                <div className="field-group">
-                  <input type="tel" placeholder="Phone Number *"
-                    value={customerInfo.phone}
-                    onChange={(e) => { setCustomerInfo({...customerInfo, phone: e.target.value}); setFormErrors({...formErrors, phone: ''}); }}
-                    className={formErrors.phone ? 'input-error' : ''}
-                  />
-                  {formErrors.phone && <p className="field-error">{formErrors.phone}</p>}
-                </div>
-
-                <div className="field-group">
-                  <input type="email" placeholder="Email *"
-                    value={customerInfo.email}
-                    onChange={(e) => { setCustomerInfo({...customerInfo, email: e.target.value}); setFormErrors({...formErrors, email: ''}); }}
-                    className={formErrors.email ? 'input-error' : ''}
-                  />
-                  {formErrors.email && <p className="field-error">{formErrors.email}</p>}
-                </div>
-
+                <input
+                  type="text"
+                  placeholder="Full Name *"
+                  value={customerInfo.name}
+                  onChange={(e) => setCustomerInfo({...customerInfo, name: e.target.value})}
+                  required
+                />
+                <input
+                  type="tel"
+                  placeholder="Phone Number *"
+                  value={customerInfo.phone}
+                  onChange={(e) => setCustomerInfo({...customerInfo, phone: e.target.value})}
+                  required
+                />
+                <input
+                  type="email"
+                  placeholder="Email *"
+                  value={customerInfo.email}
+                  onChange={(e) => setCustomerInfo({...customerInfo, email: e.target.value})}
+                  required
+                />
                 {customerInfo.deliveryType === 'delivery' && (
-                  <div className="field-group">
-                    <textarea placeholder="Delivery Address *"
-                      value={customerInfo.address}
-                      onChange={(e) => { setCustomerInfo({...customerInfo, address: e.target.value}); setFormErrors({...formErrors, address: ''}); }}
-                      rows="3"
-                      className={formErrors.address ? 'input-error' : ''}
-                    />
-                    {formErrors.address && <p className="field-error">{formErrors.address}</p>}
-                  </div>
+                  <textarea
+                    placeholder="Delivery Address *"
+                    value={customerInfo.address}
+                    onChange={(e) => setCustomerInfo({...customerInfo, address: e.target.value})}
+                    required
+                    rows="3"
+                  />
                 )}
-
-                <button type="submit" className="place-order-button"
-                  style={{background: `linear-gradient(135deg, ${theme.primary}, ${theme.dark})`}}>
+                <button type="submit" className="place-order-button">
                   Place Order - NPR {getTotalPrice() + 50}
                 </button>
               </form>

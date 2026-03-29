@@ -79,7 +79,7 @@ const PaymentModal = ({ isOpen, onClose, order, onPaymentComplete }) => {
                       <h4>Cash</h4>
                       <p>Pay with cash</p>
                     </div>
-                    {paymentMethod === 'cash' && <div className="check-mark">v</div>}
+                    {paymentMethod === 'cash' && <div className="check-mark">✓</div>}
                   </div>
 
                   <div 
@@ -90,7 +90,7 @@ const PaymentModal = ({ isOpen, onClose, order, onPaymentComplete }) => {
                       <h4>Digital Wallet</h4>
                       <p>eSewa, Khalti, etc.</p>
                     </div>
-                    {paymentMethod === 'wallet' && <div className="check-mark">v</div>}
+                    {paymentMethod === 'wallet' && <div className="check-mark">✓</div>}
                   </div>
 
                   <div 
@@ -101,7 +101,7 @@ const PaymentModal = ({ isOpen, onClose, order, onPaymentComplete }) => {
                       <h4>Card</h4>
                       <p>Credit/Debit card</p>
                     </div>
-                    {paymentMethod === 'card' && <div className="check-mark">v</div>}
+                    {paymentMethod === 'card' && <div className="check-mark">✓</div>}
                   </div>
                 </div>
               </div>
@@ -122,7 +122,7 @@ const PaymentModal = ({ isOpen, onClose, order, onPaymentComplete }) => {
           </>
         ) : (
           <div className="payment-success">
-            <div className="success-icon">OK</div>
+            <div className="success-icon">✓</div>
             <h2>Payment Successful!</h2>
             <p>Payment of NPR {order.totalAmount.toLocaleString()} received</p>
             <p className="payment-method-info">via {paymentMethod === 'cash' ? 'Cash' : paymentMethod === 'wallet' ? 'Digital Wallet' : 'Card'}</p>

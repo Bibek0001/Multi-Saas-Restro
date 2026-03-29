@@ -7,7 +7,6 @@ const CDFRestaurantPage = () => {
   const [isReservationModalOpen, setIsReservationModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [showAllMenu, setShowAllMenu] = useState(false);
 
   const restaurantData = {
     id: 'cdf',
@@ -27,18 +26,27 @@ const CDFRestaurantPage = () => {
       'Artisanal Coffee & Teas'
     ],
     menuHighlights: [
-      { name: 'Organic Garden Salad', description: 'Fresh mixed greens with seasonal vegetables and herb vinaigrette', price: 'NPR 799', image: '/assets/cdf-salad.jpg', category: 'Salads' },
-      { name: 'Sustainable Catch of the Day', description: 'Fresh local fish with quinoa pilaf and roasted vegetables', price: 'NPR 1,199', image: '/assets/cdf-fish.jpg', category: 'Seafood' },
-      { name: 'Plant-Based Buddha Bowl', description: 'Quinoa, roasted vegetables, avocado, and tahini dressing', price: 'NPR 899', image: '/assets/cdf-bowl.jpg', category: 'Vegetarian' },
-      { name: 'Classic Margherita Pizza', description: 'Wood-fired with fresh mozzarella, tomato sauce, and basil', price: 'NPR 999', image: '/assets/cdf-pizza.jpg', category: 'Pizza' },
-      { name: 'Avocado Toast', description: 'Sourdough with smashed avocado, poached egg, and microgreens', price: 'NPR 699', image: '/assets/cdf-avocado.jpg', category: 'Breakfast' },
-      { name: 'Lentil Soup', description: 'Hearty red lentil soup with cumin and fresh herbs', price: 'NPR 549', image: '/assets/cdf-soup.jpg', category: 'Soups' },
-      { name: 'Grilled Veggie Wrap', description: 'Seasonal vegetables, hummus, and feta in a whole wheat wrap', price: 'NPR 749', image: '/assets/cdf-wrap.jpg', category: 'Wraps' },
-      { name: 'Acai Bowl', description: 'Blended acai with granola, fresh fruits, and honey', price: 'NPR 849', image: '/assets/cdf-acai.jpg', category: 'Breakfast' },
-      { name: 'Mushroom Risotto', description: 'Organic arborio rice with wild mushrooms and truffle oil', price: 'NPR 1,099', image: '/assets/cdf-risotto.jpg', category: 'Mains' },
-      { name: 'Chicken Caesar Salad', description: 'Grilled organic chicken, romaine, parmesan, croutons', price: 'NPR 899', image: '/assets/cdf-caesar.jpg', category: 'Salads' },
-      { name: 'Vegan Burger', description: 'Black bean patty with avocado, tomato, and chipotle mayo', price: 'NPR 849', image: '/assets/cdf-burger.jpg', category: 'Mains' },
-      { name: 'Mango Lassi', description: 'Fresh mango blended with organic yogurt and cardamom', price: 'NPR 349', image: '/assets/cdf-lassi.jpg', category: 'Drinks' },
+      {
+        name: 'Organic Garden Salad',
+        description: 'Fresh mixed greens with seasonal vegetables and herb vinaigrette',
+        price: 'NPR 799',
+        image: '/assets/cdf-salad.jpg',
+        category: 'Salads'
+      },
+      {
+        name: 'Sustainable Catch of the Day',
+        description: 'Fresh local fish with quinoa pilaf and roasted vegetables',
+        price: 'NPR 1,199',
+        image: '/assets/cdf-fish.jpg',
+        category: 'Seafood'
+      },
+      {
+        name: 'Plant-Based Buddha Bowl',
+        description: 'Quinoa, roasted vegetables, avocado, and tahini dressing',
+        price: 'NPR 899',
+        image: '/assets/cdf-bowl.jpg',
+        category: 'Vegetarian'
+      }
     ],
     contact: {
       address: 'Thamel, Kathmandu 44600, Nepal',
@@ -61,8 +69,6 @@ const CDFRestaurantPage = () => {
     const matchesCategory = selectedCategory === 'all' || itemCategory === selectedCategory;
     return matchesSearch && matchesCategory;
   });
-
-  const displayedItems = showAllMenu ? filteredMenuItems : filteredMenuItems.slice(0, 4);
 
   return (
     <div className="restaurant-page cdf-theme">
@@ -116,7 +122,7 @@ const CDFRestaurantPage = () => {
 
         <section id="menu" className="menu-section">
           <div className="container">
-            <h2>Our Full Menu</h2>
+            <h2>Fresh Menu Highlights</h2>
             
             <div className="menu-filters">
               <div className="search-box">
@@ -141,19 +147,14 @@ const CDFRestaurantPage = () => {
             </div>
 
             <div className="menu-count">
-              Showing {displayedItems.length} of {filteredMenuItems.length} items
+              Showing {filteredMenuItems.length} items
             </div>
 
             <div className="menu-grid">
-              {displayedItems.map((item, index) => (
+              {filteredMenuItems.map((item, index) => (
                 <div key={index} className="menu-item-card">
-                  <div className="menu-item-image" style={{
-                    background: `hsl(${(index * 53 + 120) % 360}, 65%, 92%)`,
-                    display: 'flex', alignItems: 'center', justifyContent: 'center'
-                  }}>
-                    <span style={{fontSize: '2.5rem', fontWeight: 800, color: `hsl(${(index * 53 + 120) % 360}, 55%, 40%)`, opacity: 0.6}}>
-                      {item.name.charAt(0)}
-                    </span>
+                  <div className="menu-item-image">
+                    <img src={item.image} alt={item.name} />
                   </div>
                   <div className="menu-item-content">
                     <h3>{item.name}</h3>
@@ -174,12 +175,9 @@ const CDFRestaurantPage = () => {
             )}
 
             <div className="menu-cta">
-              <button className="view-full-menu" onClick={() => {
-                setShowAllMenu(!showAllMenu);
-                if (showAllMenu) document.getElementById('menu').scrollIntoView({ behavior: 'smooth' });
-              }}>
-                {showAllMenu ? 'Show Less' : `View Full Menu (${filteredMenuItems.length} items)`}
-              </button>
+              <Link to="/order" state={{ tenant: restaurantData }} className="view-full-menu">
+                View Full Menu & Order
+              </Link>
             </div>
           </div>
         </section>
@@ -369,13 +367,7 @@ const CDFRestaurantPage = () => {
               <p>Get updates on seasonal menus, sustainability initiatives, and exclusive offers</p>
               <form className="newsletter-form" onSubmit={(e) => {
                 e.preventDefault();
-                const email = e.target.querySelector('input[type="email"]').value;
-                if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                  alert('Please enter a valid email address.');
-                  return;
-                }
                 alert('Welcome to the CDF Bistro community! Check your email for a special welcome offer.');
-                e.target.reset();
               }}>
                 <input 
                   type="email" 
@@ -409,7 +401,7 @@ const CDFRestaurantPage = () => {
                 <h4>Management</h4>
                 <ul>
                   <li><Link to="/login" state={{ tenant: restaurantData }}>Manager Login</Link></li>
-                  <li><a href="https://restro24.com" target="_blank" rel="noopener noreferrer">Restro24 Platform</a></li>
+                  <li><a href="https://restro24web.netlify.app" target="_blank" rel="noopener noreferrer">Restro24 Platform</a></li>
                 </ul>
               </div>
             </div>
